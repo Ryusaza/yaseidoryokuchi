@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="target-densitydpi=device-dpi,width=device-width,initial-scale=1.0,user-scalable=yes">
+  <title>野生で努力値振るやつ</title>
+  <style>
+  ul{
+  			column-count: 3;
+  		}
+  		.tab-1 {
+  	    display: flex;
+  	    flex-wrap: wrap;
+  	    max-width: 1200px;
+  	}
+  
+  	.tab-1 > label {
+  	    flex: 1 1;
+  	    order: -1;
+  	    min-width: 70px;
+  	    padding: .7em 1em .5em;
+  	    border-bottom: 1px solid #f0f0f0;
+  	    border-radius: 0;
+  	    background-color: #e9f0f6;
+  	    color: #535353;
+  	    font-size: .9em;
+  	    text-align: center;
+  	    cursor: pointer;
+  	}
+  
+  	.tab-1 > label:hover {
+  	    opacity: .8;
+  	}
+  	
+  	.tab-1 input {
+  	    display: none;
+  	}
+  
+  	.tab-1 > div {
+  	    display: none;
+  	    width: 100%;
+  	    padding: 1.5em 1em;
+  	    background-color: #fff;
+  	}
+  
+  	.tab-1 label:has(:checked) {
+  	    background-color: #fff;
+  	    border-color: #2589d0 #f0f0f0 #fff;
+  	    border-style: solid;
+  	    border-width: 4px 1px 1px;
+  	    border-radius: 5px;
+  	    color: #333333;
+  	}
+  
+  	.tab-1 label:has(:checked) + div {
+  	    display: block;
+  	}
+  </style>
+</head>
+
+<body>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+  <script>
+  $(function(){
+  	var number,total_numner;
+  	var max = 252; //合計最大数
+  	var $input = $('#count .number'); //カウントする箇所
+  	var $plus = $('#count .plus'); //アップボタン
+  	var $minus = $('#count .minus'); //ダウンボタン
+  	//合計カウント用関数
+  	function total() {
+  		total_numner = 0;
+  		$input.each(function(val) {
+  			val = Number($(this).val());
+  			total_numner += val;
+  		});
+  		return total_numner;
+  	}
+  	//ロード時
+  	$(window).on('load', function() {
+  		$input.each(function() {
+  			number = Number($(this).val());
+  			if (number == max) {
+  				$(this).next($plus).prop("disabled", true);
+  			} else if (number == 0) {
+  				$(this).prev($minus).prop("disabled", true);
+  			}
+  		});
+  		total();
+  		if (total_numner == max) {
+  			$plus.prop("disabled", true);
+  		} else {
+  			$plus.prop("disabled", false);
+  		}
+  	});
+  	//ダウンボタンクリック時
+  	$minus.on('click', function() {
+  		total();
+  		number = Number($(this).next($input).val());
+  		if (number > 0) {
+  			$(this).next($input).val(number - 1);
+  			if ((number - 1) == 0) {
+  			$(this).prop("disabled", true);
+  			}
+  			$(this).next().next($plus).prop("disabled", false);
+  		} else {
+  			$(this).prop("disabled", true);
+  		}
+  		total();
+  		if (total_numner < max) {
+  			$plus.prop("disabled", false);
+  		}
+  	});
+  	//アップボタンクリック時
+  	$plus.on('click', function() {
+  		number = Number($(this).prev($input).val());
+  		if (number < max) {
+  			$(this).prev($input).val(number + 1);
+  			if ((number + 1) == max) {
+  			$(this).prop("disabled", true);
+  			}
+  			$(this).prev().prev($minus).prop("disabled", false);
+  		} else {
+  			$(this).prop("disabled", true);
+  		}
+  		total();
+  		if (total_numner == max) {
+  			$plus.prop("disabled", true);
+  		} else {
+  			$plus.prop("disabled", false);
+  		}
+  	});
+  });
+  </script>
+  <h2>野生で努力値振る用の撃破数カウンター</h2>
+  <p>リロードでリセット</p>
+  <table id="count">
+    <tr>
+      <th>HP</th>
+      <td>
+        <button class="minus">－</button>
+        <input type="text" name="input01" value="0" readonly class="number">
+        <button class="plus">＋</button>（体）</td>
+    </tr>
+    <tr>
+      <th>攻撃</th>
+      <td>
+        <button class="minus">－</button>
+        <input type="text" name="input02" value="0" readonly class="number">
+        <button class="plus">＋</button>（体）</td>
+    </tr>
+    <tr>
+      <th>防御</th>
+      <td>
+        <button class="minus">－</button>
+        <input type="text" name="input03" value="0" readonly class="number">
+        <button class="plus">＋</button>（体）</td>
+    </tr>
+    <tr>
+      <th>特攻</th>
+      <td>
+        <button class="minus">－</button>
+        <input type="text" name="input01" value="0" readonly class="number">
+        <button class="plus">＋</button>（体）</td>
+    </tr>
+    <tr>
+      <th>特防</th>
+      <td>
+        <button class="minus">－</button>
+        <input type="text" name="input02" value="0" readonly class="number">
+        <button class="plus">＋</button>（体）</td>
+    </tr>
+    <tr>
+      <th>素早</th>
+      <td>
+        <button class="minus">－</button>
+        <input type="text" name="input03" value="0" readonly class="number">
+        <button class="plus">＋</button>（体）</td>
+    </tr>
+  </table>
+  <p>メモ欄
+    <br>
+    <textarea name="comment" cols="40" rows="8">
+    </textarea>
+  </p>
+  <h3>パワー○○対応表</h3>
+  <ul>
+    <li>パワーウエイト→HP</li>
+    <li>パワーリスト→攻撃</li>
+    <li>パワーベルト→防御</li>
+    <li>パワーレンズ→特攻</li>
+    <li>パワーバンド→特防</li>
+    <li>パワーアンクル→素早さ</li>
+  </ul>
+  <p>パワー○○所持で252振り→+3:野生22+羽10orドリンク1 +2:野生25+羽2</p>
+  <h3>店売りそうぐうパワー対応表</h3>
+  <b>パルデア地方</b>
+  <table style="border: 1px solid #CCC;border-collapse: collapse;width: 100%;">
+    <tr>
+      <td style="padding:10px;border: 1px solid #CCC;background-color: #F4F8FF;font-weight: bold;padding: 5px;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;background-color: #F4F8FF;font-weight: bold;padding: 5px;">テーブル</td>
+      <td style="padding:10px;border: 1px solid #CCC;background-color: #F4F8FF;font-weight: bold;padding: 5px;">アカデミー</td>
+      <td style="padding:10px;border: 1px solid #CCC;background-color: #F4F8FF;font-weight: bold;padding: 5px;">セルクル</td>
+      <td style="padding:10px;border: 1px solid #CCC;background-color: #F4F8FF;font-weight: bold;padding: 5px;">ボウル</td>
+      <td style="padding:10px;border: 1px solid #CCC;background-color: #F4F8FF;font-weight: bold;padding: 5px;">ハッコウ</td>
+      <td style="padding:10px;border: 1px solid #CCC;background-color: #F4F8FF;font-weight: bold;padding: 5px;">カラフ</td>
+      <td style="padding:10px;border: 1px solid #CCC;background-color: #F4F8FF;font-weight: bold;padding: 5px;">チャンプル</td>
+      <td style="padding:10px;border: 1px solid #CCC;background-color: #F4F8FF;font-weight: bold;padding: 5px;">フリッジ</td>
+      <td style="padding:10px;border: 1px solid #CCC;background-color: #F4F8FF;font-weight: bold;padding: 5px;">マリナード</td>
+      <td style="padding:10px;border: 1px solid #CCC;background-color: #F4F8FF;font-weight: bold;padding: 5px;">ベイク</td>
+    </tr>
+    <tr>
+      <td style="padding:10px;background-color: #F9FCFE;font-weight: bold;">まいど・さんど(水・電・闘)</td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+    </tr>
+    <tr>
+      <td style="padding:10px;border: 1px solid #CCC;background-color: #F9FCFE;font-weight: bold;">バル・キバル(電・竜・妖)</td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+    </tr>
+    <tr>
+      <td style="padding:10px;border: 1px solid #CCC;background-color: #F9FCFE;font-weight: bold;">レストラン　鮮度一番(水)</td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+    </tr>
+    <tr>
+      <td style="padding:10px;border: 1px solid #CCC;background-color: #F9FCFE;font-weight: bold;">来来来軒(炎)</td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+    </tr>
+    <tr>
+      <td style="padding:10px;border: 1px solid #CCC;background-color: #F9FCFE;font-weight: bold;">ガストロノミーファミリア(氷・妖)</td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+    </tr>
+    <tr>
+      <td style="padding:10px;border: 1px solid #CCC;background-color: #F9FCFE;font-weight: bold;">ファミリーレストランバラト(飛)</td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+    </tr>
+    <tr>
+      <td style="padding:10px;border: 1px solid #CCC;background-color: #F9FCFE;font-weight: bold;">喫茶室なぎさ(竜)</td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+    </tr>
+    <tr>
+      <td style="padding:10px;border: 1px solid #CCC;background-color: #F9FCFE;font-weight: bold;">学生食堂(電・闘)</td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+    </tr>
+    <tr>
+      <td style="padding:10px;border: 1px solid #CCC;background-color: #F9FCFE;font-weight: bold;">宝食堂(炎・岩・毒)</td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+    </tr>
+    <tr>
+      <td style="padding:10px;border: 1px solid #CCC;background-color: #F9FCFE;font-weight: bold;">ハイダイ倶楽部(超)</td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+    </tr>
+    <tr>
+      <td style="padding:10px;border: 1px solid #CCC;background-color: #F9FCFE;font-weight: bold;">チュロスにチュ！(超)</td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+    </tr>
+    <tr>
+      <td style="padding:10px;border: 1px solid #CCC;background-color: #F9FCFE;font-weight: bold;">串のトリコ(妖)</td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+    </tr>
+    <tr>
+      <td style="padding:10px;border: 1px solid #CCC;background-color: #F9FCFE;font-weight: bold;">カントークレープ(水・電)</td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;">〇</td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+    </tr>
+  </table>
+  <br>
+  <b>キタカミの里</b>
+  <table style="border: 1px solid #CCC;border-collapse: collapse;width: 100%;">
+    <tr>
+      <td style="padding:10px;background-color: #F9FCFE;font-weight: bold;">かき氷屋</td>
+      <td style="padding:10px;border: 1px solid #CCC;">草</td>
+      <td style="padding:10px;border: 1px solid #CCC;">虫</td>
+      <td style="padding:10px;border: 1px solid #CCC;">無</td>
+    </tr>
+    <tr>
+      <td style="padding:10px;border: 1px solid #CCC;background-color: #F9FCFE;font-weight: bold;">フルーツ飴屋</td>
+      <td style="padding:10px;border: 1px solid #CCC;">地</td>
+      <td style="padding:10px;border: 1px solid #CCC;">霊</td>
+      <td style="padding:10px;border: 1px solid #CCC;">鋼</td>
+    </tr>
+    <tr>
+      <td style="padding:10px;border: 1px solid #CCC;background-color: #F9FCFE;font-weight: bold;">アイス屋</td>
+      <td style="padding:10px;border: 1px solid #CCC;">悪</td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+      <td style="padding:10px;border: 1px solid #CCC;"> </td>
+    </tr>
+  </table>
+  <h3>野生ポケモン努力値表</h3>
+  <div class="tab-1">
+    <label>
+      <input type="radio" name="tab-1" checked>HP</label>
+    <div>
+      <h3>パルデア地方</h3>
+      <b>+2</b>
+      <ul>
+        <li>プリン</li>
+        <li>ハリテヤマ</li>
+        <li>マリル</li>
+        <li>ラッキー</li>
+        <li>ドオー</li>
+        <li>パフュートン</li>
+        <li>シャワーズ</li>
+        <li>ナマズン</li>
+        <li>フワライド</li>
+        <li>ゴーゴート</li>
+        <li>ヨクバリス</li>
+        <li>ハラバリー</li>
+        <li>トロピウス</li>
+        <li>オニゴーリ</li>
+        <li>トリトドン</li>
+        <li>モロバレル</li>
+        <li>ママンボウ</li>
+        <li>ハルクジラ</li>
+        <li>マルノーム</li>
+        <li>スカタンク</li>
+        <li>ノココッチ</li>
+      </ul>
+      <b>+3</b>
+      <ul>
+        <li>マリルリ</li>
+        <li>プクリン</li>
+        <li>ハピナス</li>
+        <li>ケッキング</li>
+        <li>ヘイラッシャ</li>
+        <li>リキキリン</li>
+        <li>サケブシッポ</li>
+      </ul>
+      <h3>キタカミの里</h3>
+      <b>+2</b>
+      <ul>
+        <li>ピッピ</li>
+        <li>ノココッチ</li>
+        <li>ヨルノズク</li>
+        <li>ナマズン</li>
+        <li>ヨクバリス</li>
+        <li>タルップル</li>
+        <li>ヌオー</li>
+        <li>カビゴン</li>
+      </ul>
+      <b>+3</b>
+      <p>なし</p>
+      <h3>ブルーベリー学園</h3>
+      <b>+2</b>
+      <ul>
+        <li>ラッキー</li>
+        <li>ママンボウ</li>
+        <li>ランターン</li>
+        <li>ラプラス</li>
+      </ul>
+      <b>+3</b>
+      <ul>
+        <li>リキキリン</li>
+        <li>ハピナス</li>
+        <li>ケッキング</li>
+      </ul>
+    </div>
+    <label>
+      <input type="radio" name="tab-1">攻撃</label>
+    <div>
+      <h3>パルデア地方</h3>
+      <b>+2</b>
+      <ul>
+        <li>カラミンゴ</li>
+        <li>ギャラドス</li>
+        <li>デカグース</li>
+        <li>ネッコアラ</li>
+        <li>カジリガメ</li>
+        <li>メブキジカ</li>
+        <li>ウインディ</li>
+        <li>オコリザル</li>
+        <li>ルチャブル</li>
+        <li>ザングース</li>
+        <li>ルクシオ</li>
+        <li>ウォーグル</li>
+        <li>ブースター</li>
+        <li>ハカドッグ</li>
+        <li>バチンウニ</li>
+        <li>サナギラス</li>
+        <li>ジュペッタ</li>
+        <li>ドンカラス</li>
+        <li>ガバイト</li>
+        <li>シビビール</li>
+        <li>ルガルガン</li>
+        <li>バンバドロ</li>
+        <li>ダイオウドウ</li>
+        <li>エクスレッグ</li>
+        <li>スコヴィラン</li>
+        <li>オトシドリ</li>
+        <li>ハギギシリ</li>
+        <li>ハクリュー</li>
+        <li>ケンタロス</li>
+        <li>キノガッサ</li>
+        <li>マフィティフ</li>
+        <li>リングマ</li>
+        <li>ミガルーサ</li>
+        <li>ケケンカニ</li>
+        <li>オノンド</li>
+        <li>ジヘッド</li>
+        <li>ツンベアー</li>
+        <li>ラランテス</li>
+        <li>ブロロローム</li>
+        <li>アノホラグサ</li>
+        <li>ヘラクロス</li>
+        <li>キリキザン</li>
+        <li>コロトック</li>
+        <li>セゴール</li>
+      </ul>
+      <b>+3</b>
+      <ul>
+        <li>ムクホーク</li>
+        <li>レントラー</li>
+        <li>エルレイド</li>
+        <li>ガブリアス</li>
+        <li>カイリュー</li>
+        <li>アマージョ</li>
+        <li>シビルドン</li>
+        <li>イダイナキバ</li>
+        <li>アラブルタケ</li>
+        <li>チヲハウハネ</li>
+        <li>トドロクツキ</li>
+        <li>テツノカイナ</li>
+        <li>テツノイバラ</li>
+        <li>テツノブジン</li>
+      </ul>
+      <h3>キタカミの里</h3>
+      <b>+2</b>
+      <ul>
+        <li>グラエナ</li>
+        <li>ヘラクロス</li>
+        <li>コロトック</li>
+        <li>ドテッコツ</li>
+        <li>コノハナ</li>
+        <li>ガバイト</li>
+        <li>ルクシオ</li>
+        <li>ルガルガン</li>
+        <li>アーボック</li>
+        <li>ウツドン</li>
+        <li>アリアドス</li>
+        <li>アップリュー</li>
+        <li>ギャラドス</li>
+        <li>シザリガー</li>
+        <li>オトシドリ</li>
+        <li>オコリザル</li>
+        <li>ラランテス</li>
+        <li>カジリガメ</li>
+        <li>シビビール</li>
+        <li>オーロット</li>
+      </ul>
+      <b>+3</b>
+      <ul>
+        <li>ムクホーク</li>
+        <li>ハハコモリ</li>
+        <li>コノヨザル</li>
+        <li>レントラー</li>
+        <li>エルレイド</li>
+        <li>ドドゲザン</li>
+        <li>オーロンゲ</li>
+      </ul>
+      <h3>ブルーベリー学園</h3>
+      <b>+2</b>
+      <ul>
+        <li>メブキジカ</li>
+        <li>ハッサム</li>
+        <li>ワルビル</li>
+        <li>シビビール</li>
+        <li>ハギギシリ</li>
+        <li>サイドン</li>
+        <li>ドードリオ</li>
+        <li>ウォーグル</li>
+        <li>ダグトリオ</li>
+        <li>ケララッパ</li>
+        <li>グランブル</li>
+        <li>ザングース</li>
+        <li>カラマネロ</li>
+        <li>サワムラー</li>
+        <li>オノンド</li>
+        <li>ゴルーグ</li>
+        <li>ケケンカニ</li>
+        <li>ツンベアー</li>
+        <li>ドリュウズ</li>
+      </ul>
+      <b>+3</b>
+      <ul>
+        <li>ワルビアル</li>
+        <li>ドデカバシ</li>
+        <li>バサギリ</li>
+        <li>オノノクス</li>
+        <li>シビルドン</li>
+      </ul>
+    </div>
+    <label>
+      <input type="radio" name="tab-1">防御</label>
+    <div>
+      <h3>パルデア地方</h3>
+      <b>+2</b>
+      <ul>
+        <li>コフーライ</li>
+        <li>ガケガニ</li>
+        <li>リーフィア</li>
+        <li>パルシェン</li>
+        <li>コモルー</li>
+        <li>ジオヅム</li>
+        <li>コータス</li>
+        <li>ウソッキー</li>
+        <li>ワナイダー</li>
+        <li>イシヘンジン</li>
+        <li>ミミズズ</li>
+        <li>カバルドン</li>
+        <li>サダイジャ</li>
+        <li>ペリッパー</li>
+        <li>ドヒドイデ</li>
+        <li>トロッゴン</li>
+        <li>コオリッポ</li>
+        <li>クレベース</li>
+        <li>ヤドラン</li>
+        <li>フォレトス</li>
+        <li>シロデスナ</li>
+      </ul>
+      <b>+3</b>
+      <ul>
+        <li>アーマーガア</li>
+        <li>キョジオーン</li>
+        <li>テツノワダチ</li>
+      </ul>
+      <h3>キタカミの里</h3>
+      <b>+2</b>
+      <ul>
+        <li>サンドパン</li>
+        <li>ゴローン</li>
+        <li>ジャランゴ</li>
+        <li>ミミズズ</li>
+        <li>デンヂムシ</li>
+        <li>クルマユ</li>
+        <li>ウソッキー</li>
+      </ul>
+      <b>+3</b>
+      <p>なし</p>
+      <h3>ブルーベリー学園</h3>
+      <b>+2</b>
+      <ul>
+        <li>コータス</li>
+        <li>エアームド</li>
+        <li>ゴローン</li>
+        <li>メタング</li>
+      </ul>
+      <b>+3</b>
+      <p>なし</p>
+    </div>
+    <label>
+      <input type="radio" name="tab-1" checked>特攻</label>
+    <div>
+      <h3>パルデア地方</h3>
+      <b>+2</b>
+      <ul>
+        <li>オドリドリ</li>
+        <li>モココ</li>
+        <li>ドレディア</li>
+        <li>ヘルガー</li>
+        <li>ゴルダック</li>
+        <li>キマワリ</li>
+        <li>ブロスター</li>
+        <li>ストリンダー</li>
+        <li>オリーニョ</li>
+        <li>ゴースト</li>
+        <li>キリンリキ</li>
+        <li>キルリア</li>
+        <li>エーフィ</li>
+        <li>カエンジシ</li>
+        <li>ギモー</li>
+        <li>グレイシア</li>
+        <li>モスノウ</li>
+        <li>イエッサン(♂)</li>
+        <li>レアコイル</li>
+        <li>シャリタツ</li>
+        <li>ゾロアーク</li>
+        <li>キラフロル</li>
+      </ul>
+      <b>+3</b>
+      <ul>
+        <li>デンリュウ</li>
+        <li>ジバコイル</li>
+        <li>ウルガモス</li>
+        <li>スナノケガワ</li>
+        <li>テツノドクガ</li>
+        <li>テツノコウベ</li>
+      </ul>
+      <h3>キタカミの里</h3>
+      <b>+2</b>
+      <ul>
+        <li>ヘルガー</li>
+        <li>ゴースト</li>
+        <li>キラフロル</li>
+        <li>キルリア</li>
+        <li>オドリドリ</li>
+        <li>テブリム</li>
+        <li>イエッサン(♂)</li>
+        <li>ランプラー</li>
+        <li>ギモー</li>
+      </ul>
+      <b>+3</b>
+      <ul>
+        <li>ゲンガー</li>
+        <li>サーナイト</li>
+        <li>クワガノン</li>
+        <li>ブリムオン</li>
+      </ul>
+      <h3>ブルーベリー学園</h3>
+      <b>+2</b>
+      <ul>
+        <li>キリンリキ</li>
+        <li>ナッシー</li>
+        <li>バルジーナ</li>
+        <li>ブーバー</li>
+        <li>ベラカス</li>
+        <li>カエンジシ</li>
+        <li>オドリドリ</li>
+        <li>クサイハナ</li>
+        <li>レアコイル</li>
+        <li>ダブラン</li>
+        <li>ジュラルドン</li>
+      </ul>
+      <b>+3</b>
+      <ul>
+        <li>ラフレシア</li>
+        <li>ジバコイル</li>
+        <li>ランクルス</li>
+      </ul>
+    </div>
+    <label>
+      <input type="radio" name="tab-1" checked>特防</label>
+    <div>
+      <h3>パルデア地方</h3>
+      <b>+2</b>
+      <ul>
+        <li>フラエッテ</li>
+        <li>ブーピッグ</li>
+        <li>ヌメイル</li>
+        <li>スリーパー</li>
+        <li>ブラッキー</li>
+        <li>チルタリス</li>
+        <li>ゴチミル</li>
+        <li>ニンフィア</li>
+        <li>ナカヌチャン</li>
+        <li>ヤレユータン</li>
+        <li>ミミッキュ</li>
+        <li>ドラミドロ</li>
+        <li>イエッサン(♀)</li>
+        <li>フリージオ</li>
+        <li>リククラゲ</li>
+      </ul>
+      <b>+3</b>
+      <ul>
+        <li>フラージェス</li>
+        <li>ゴチルゼル</li>
+      </ul>
+      <h3>キタカミの里</h3>
+      <b>+2</b>
+      <ul>
+        <li>ハスブレロ</li>
+        <li>ミミッキュ</li>
+        <li>ウッウ</li>
+        <li>イエッサン(♀)</li>
+        <li>リククラゲ</li>
+        <li>ヌメイル</li>
+        <li>
+          <li>
+            <li>
+              <li>
+                <li>
+                  <li>
+                    <li>
+                      <li>
+                        <li>
+                          <li>
+                            <li>
+                              <li>
+                                <li>
+                                  <li>
+                                    <li>
+      </ul>
+      <b>+3</b>
+      <p>なし</p>
+      <h3>ブルーベリー学園</h3>
+      <b>+2</b>
+      <ul>
+        <li>ドククラゲ</li>
+        <li>キュワワー</li>
+        <li>オニシズクモ</li>
+        <li>カポエラー</li>
+        <li>ジュゴン</li>
+        <li>ゴチミル</li>
+      </ul>
+      <b>+3</b>
+      <ul>
+        <li>キレイハナ</li>
+        <li>ゴチルゼル</li>
+      </ul>
+    </div>
+    <label>
+      <input type="radio" name="tab-1" checked>素早</label>
+    <div>
+      <h3>パルデア地方</h3>
+      <b>+2</b>
+      <ul>
+        <li>ムクバード</li>
+        <li>ピカチュウ</li>
+        <li>ヒノヤコマ</li>
+        <li>バスラオ</li>
+        <li>パモット</li>
+        <li>ペルシアン</li>
+        <li>エンニュート</li>
+        <li>ポポッコ</li>
+        <li>ヤルキモノ</li>
+        <li>アオガラス</li>
+        <li>フローゼル</li>
+        <li>カマスジョー</li>
+        <li>タイカイデン</li>
+        <li>バウッツェル</li>
+        <li>サンダース</li>
+        <li>ダグトリオ</li>
+        <li>ウミトリオ</li>
+        <li>モトトカゲ</li>
+        <li>マルマイン</li>
+        <li>チャーレム</li>
+        <li>クエスパトラ</li>
+        <li>ネオラント</li>
+        <li>タギングル</li>
+        <li>オンバーン</li>
+        <li>ドロンチ</li>
+        <li>デデンネ</li>
+        <li>ユキメノコ</li>
+      </ul>
+      <b>+3</b>
+      <ul>
+        <li>ファイアロー</li>
+        <li>ワタッコ</li>
+        <li>ライチュウ</li>
+        <li>テツノツツミ</li>
+      </ul>
+      <h3>キタカミの里</h3>
+      <b>+2</b>
+      <ul>
+        <li>オオタチ</li>
+        <li>ピカチュウ</li>
+        <li>ニョロゾ</li>
+        <li>モルペコ</li>
+        <li>ムクバード</li>
+        <li>アブリボン</li>
+        <li>スワンナ</li>
+        <li>バスラオ</li>
+        <li>カマスジョー</li>
+      </ul>
+      <b>+3</b>
+      <p>なし</p>
+      <h3>ブルーベリー学園</h3>
+      <b>+2</b>
+      <ul>
+        <li>エレブー</li>
+        <li>ゼブライカ</li>
+        <li>ネオラント</li>
+        <li>エルフーン</li>
+        <li>ニャオニクス</li>
+        <li>ヒノヤコマ</li>
+        <li>チラチーノ</li>
+        <li>デンチュラ</li>
+      </ul>
+      <b>+3</b>
+      <ul>
+        <li>ファイアロー</li>
+      </ul>
+    </div>
+  </div>
+</body>
+
+</html>
